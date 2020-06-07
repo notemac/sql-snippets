@@ -1,4 +1,4 @@
-## Error when processing tabular model from SQL Server Agent
+## Error when processing tabular model from SQL Server Agent job
 SQL Server Analysis Services Command:
 ```
 {
