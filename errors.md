@@ -1,4 +1,4 @@
-**Error when processing tabular model from SQL Server Agent**
+## Error when processing tabular model from SQL Server Agent
 SQL Server Analysis Services Command:
 ```{
   "refresh": {
