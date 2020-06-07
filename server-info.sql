@@ -17,6 +17,8 @@ select
   serverproperty('ProductLevel') as ProductLevel,
   serverproperty('Edition') as Edition,
   serverproperty('ProductVersion') as ProductVersion
+  
+  
 -- *** Show info about SQL Server Analysis Services instance. XMLA query: ***
 <Discover xmlns="urn:schemas-microsoft-com:xml-analysis">
     <RequestType>DISCOVER_XML_METADATA</RequestType>
