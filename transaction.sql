@@ -12,10 +12,9 @@ BEGIN
             PRINT 'The transaction is in an uncommittable state.' + ' Rolling back transaction.'
             ROLLBACK TRANSACTION;
         END;
-        IF (XACT_STATE()) = 1
-        BEGIN
-            PRINT 'The transaction is committable.' + ' Committing transaction.'
-            COMMIT TRANSACTION;   
-        END;
+        IF (XACT_STATE()) = 1 AND @@TRANCOUNT = 0
+            ROLLBACK TRANSACTION;
+        -- log errors
+        THROW
     END CATCH
 END
