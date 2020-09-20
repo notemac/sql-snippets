@@ -1,4 +1,4 @@
-- example 1
+-- example 1
 BEGIN
     SET XACT_ABORT ON;
     BEGIN TRY
