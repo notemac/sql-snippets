@@ -1,3 +1,14 @@
+## SSISDB. The database principal has granted or denied permissions to catalog objects in the database and cannot be dropped
+```
+select op.*
+from internal.operation_permissions op
+inner join sys.database_principals p on op.[sid] = p.[sid]
+where p.name = 'domain\username'
+```
+The other three tables were internal.folder_permissions, internal.project_permissions, and internal.environment_permissions, so check those if internal.operation_permissions doesn't turn up anything.
+https://social.technet.microsoft.com/Forums/ie/en-US/f5e84dc3-fb1d-4f57-9898-d0e763090261/the-database-principal-has-granted-or-denied-permissions-to-catalog-objects-in-the-database-and?forum=sqlsecurity
+
+
 ## Error when processing tabular model from SQL Server Agent job
 SQL Server Analysis Services Command:
 ```
