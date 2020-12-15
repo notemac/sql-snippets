@@ -10,3 +10,7 @@ with items as
 select *  
 from items, (select level l from dual connect by level <= 10) lvl
 where lvl.l <= item_qty;
+
+
+select * from all_tab_columns;
+select * from all_tab_col_statistics;
