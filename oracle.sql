@@ -14,3 +14,4 @@ where lvl.l <= item_qty;
 
 select * from all_tab_columns;
 select * from all_tab_col_statistics;
+select * from all_tables;
