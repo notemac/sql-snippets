@@ -17,3 +17,6 @@ select * from all_tab_col_statistics;
 select * from all_tables;
 select * from all_indexes;
 select * from all_ind_columns;
+
+-- Character Length Semantics
+select * from nls_database_parameters where parameter = 'NLS_LENGTH_SEMANTICS'
