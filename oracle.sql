@@ -20,3 +20,24 @@ select * from all_ind_columns;
 
 -- Character Length Semantics
 select * from nls_database_parameters where parameter = 'NLS_LENGTH_SEMANTICS'
+
+
+-- Split period by months
+select 
+    case
+        when level = 1
+        then '@{pipeline().parameters.DateFrom}'
+        else TO_CHAR(TRUNC(ADD_MONTHS(TO_DATE('@{pipeline().parameters.DateFrom}', 'YYYY-MM-DD'), level - 1), 'MONTH'), 'YYYY-MM-DD')
+        end as DateFrom
+    ,  
+    case
+        when '@{pipeline().parameters.DateFrom}' = '@{pipeline().parameters.DateTo}'
+        then '@{pipeline().parameters.DateFrom}'
+        when level = TRUNC(MONTHS_BETWEEN(LAST_DAY(TO_DATE('@{pipeline().parameters.DateTo}', 'YYYY-MM-DD')), TO_DATE('@{pipeline().parameters.DateFrom}', 'YYYY-MM-DD'))) + 1
+        then '@{pipeline().parameters.DateTo}'
+        else TO_CHAR(ADD_MONTHS(LAST_DAY(TO_DATE('@{pipeline().parameters.DateFrom}', 'YYYY-MM-DD')), level - 1), 'YYYY-MM-DD')
+        end as DateTo
+from 
+    dual 
+connect 
+    by level <= MONTHS_BETWEEN(LAST_DAY(TO_DATE('@{pipeline().parameters.DateTo}', 'YYYY-MM-DD')), TO_DATE('@{pipeline().parameters.DateFrom}', 'YYYY-MM-DD')) + 1;
