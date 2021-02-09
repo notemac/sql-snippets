@@ -1,5 +1,5 @@
--- Rows multiplied by a value in a column
-with items as
+
+with items as -- Rows multiplied by a value in a column
 (
     select 1 as item_id, 5 as item_qty, 'hello' as item_value from dual
     union all
