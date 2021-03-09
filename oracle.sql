@@ -21,7 +21,40 @@ select * from all_ind_columns;
 -- Character Length Semantics
 select * from nls_database_parameters where parameter = 'NLS_LENGTH_SEMANTICS'
 
-
+-- Split period by months
+select 
+    case
+        when level = 1
+        then DateFrom_str
+        else TO_CHAR(TRUNC(ADD_MONTHS(DateFrom, level - 1), 'MONTH'), 'YYYY-MM-DD')
+    end as DateFrom
+    ,  
+    case
+        when (TRUNC(DateFrom, 'MONTH') = TRUNC(DateTo, 'MONTH')) or (level = month_diff + 1)
+        then DateTo_str
+        else TO_CHAR(ADD_MONTHS(LAST_DAY(DateFrom), level - 1), 'YYYY-MM-DD')
+    end as DateTo
+from 
+    dual
+    cross join 
+    (
+        select 
+            '2018-01-01' as DateFrom_str
+            , '2018-03-01' as DateTo_str
+        from dual
+    ) params
+    cross apply 
+    (
+        select 
+            TO_DATE(DateFrom_str, 'YYYY-MM-DD') as DateFrom
+            , TO_DATE(DateTo_str, 'YYYY-MM-DD') as DateTo
+            , (extract(year from TO_DATE(DateTo_str, 'YYYY-MM-DD')) - extract(year from TO_DATE(DateFrom_str, 'YYYY-MM-DD'))) * 12
+                + (extract(month from TO_DATE(DateTo_str, 'YYYY-MM-DD')) - extract(month from TO_DATE(DateFrom_str, 'YYYY-MM-DD'))) as month_diff
+        from dual
+    ) s
+connect 
+    by level <= month_diff + 1;
+                                                                                   
 -- Split period by months
 -- TODO: fix bug when DateTo = 2018-01-30, DateFrom = 2018-02-02
 select 
