@@ -55,6 +55,70 @@ from
 connect 
     by level <= month_diff + 1;
                                                                                    
+-- Split period by half-months
+with months as
+(
+    select 
+        case
+            when level = 1
+            then DateFrom
+            else TRUNC(ADD_MONTHS(DateFrom, level - 1), 'MONTH')
+        end as DateFrom
+        ,  
+        case
+            when (TRUNC(DateFrom, 'MONTH') = TRUNC(DateTo, 'MONTH')) or (level = month_diff + 1)
+            then DateTo
+            else ADD_MONTHS(LAST_DAY(DateFrom), level - 1)
+        end as DateTo
+    from 
+        dual
+        cross join 
+        (
+            select 
+                '2018-01-16' as DateFrom_str
+                , '2018-04-01' as DateTo_str
+            from dual
+        ) params
+        cross apply 
+        (
+            select 
+                TO_DATE(DateFrom_str, 'YYYY-MM-DD') as DateFrom
+                , TO_DATE(DateTo_str, 'YYYY-MM-DD') as DateTo
+                , (extract(year from TO_DATE(DateTo_str, 'YYYY-MM-DD')) - extract(year from TO_DATE(DateFrom_str, 'YYYY-MM-DD'))) * 12
+                    + (extract(month from TO_DATE(DateTo_str, 'YYYY-MM-DD')) - extract(month from TO_DATE(DateFrom_str, 'YYYY-MM-DD'))) as month_diff
+            from dual
+        ) s
+    connect 
+        by level <= month_diff + 1
+)
+select
+    to_char(p.DateFrom, 'YYYY-MM-DD') as DateFrom
+    , to_char(p.DateTo, 'YYYY-MM-DD') as DateTo
+from
+    months m
+    cross apply (
+        select 
+            m.DateFrom
+            ,
+            case
+                when extract(day from m.DateFrom) <= 15 and extract(day from m.DateTo) > 15
+                then trunc(m.DateFrom, 'MONTH') + 14
+                else m.DateTo
+            end as DateTo
+        from dual
+
+        union all
+
+        select 
+            trunc(m.DateFrom, 'MONTH') + 15 as DateFrom
+            , m.DateTo
+        from dual
+        where
+            extract(day from m.DateFrom) <= 15 and extract(day from m.DateTo) > 15
+    ) p
+order by
+    p.DateFrom desc;
+                                                                                   
 -- Split period by months
 -- TODO: fix bug when DateTo = 2018-01-30, DateFrom = 2018-02-02
 select 
