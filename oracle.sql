@@ -23,6 +23,7 @@ select * from nls_database_parameters where parameter = 'NLS_LENGTH_SEMANTICS'
 
 
 -- Split period by months
+-- TODO: fix bug when DateTo = 2018-01-30, DateFrom = 2018-02-02
 select 
     case
         when level = 1
@@ -42,7 +43,7 @@ from
 connect 
     by level <= MONTHS_BETWEEN(LAST_DAY(TO_DATE('@{pipeline().parameters.DateTo}', 'YYYY-MM-DD')), TO_DATE('@{pipeline().parameters.DateFrom}', 'YYYY-MM-DD')) + 1;
                                                                                                            
-                                                                                                           
+-- TODO: fix bugs                                                                                                                                                                                                          
 with months as
 (
     select 
