@@ -116,6 +116,28 @@ from
         where
             extract(day from m.DateFrom) <= 15 and extract(day from m.DateTo) > 15
     ) p
+    /*
+    cross apply (
+        select 
+            m.DateFrom
+            ,
+            case
+                when extract(day from m.DateFrom) = 1
+                then m.DateFrom
+                else m.DateTo
+            end as DateTo
+        from dual
+
+        union all
+
+        select 
+            trunc(m.DateFrom, 'MONTH') + 1 as DateFrom
+            , m.DateTo
+        from dual
+        where
+            extract(day from m.DateFrom) = 1
+    ) p
+    */
 order by
     p.DateFrom desc;
                                                                                    
