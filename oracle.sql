@@ -126,6 +126,7 @@ from
                 then m.DateFrom
                 else m.DateTo
             end as DateTo
+            , case when extract(day from m.DateFrom) = 1 then extract(year from m.DateFrom)*100 + extract(month from m.DateFrom) else 0 end as n
         from dual
 
         union all
@@ -133,9 +134,10 @@ from
         select 
             trunc(m.DateFrom, 'MONTH') + 1 as DateFrom
             , m.DateTo
+            , 0 as n
         from dual
         where
-            extract(day from m.DateFrom) = 1
+            extract(day from m.DateFrom) = 1 and extract(day from m.DateTo) <> 1
     ) p
     */
 order by
