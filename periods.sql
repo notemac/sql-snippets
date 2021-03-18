@@ -199,8 +199,8 @@ as
         , s2.MinRunStartTime
         , s2.MaxRunEndTime
 )
-, source3
-as
+, 
+source3 as
 (
     select 
         MainPipelineRunID
@@ -210,11 +210,18 @@ as
     group by
         MainPipelineRunID, MinRunStartTime
 )
-select
-    MainPipelineRunID
-    , min(MinRunStartTime) as MinRunStartTime
-    , MaxRunEndTime
-from source3
-group by
-    MainPipelineRunID, MaxRunEndTime
+, source4 as
+(
+    select
+        MainPipelineRunID
+        , min(MinRunStartTime) as MinRunStartTime
+        , MaxRunEndTime
+    from source3
+    group by
+        MainPipelineRunID, MaxRunEndTime
+)
+select 
+    DATEDIFF(ss, min(MinRunStartTime), max(MaxRunEndTime)) as AllDuration
+    , sum(DATEDIFF(ss, MinRunStartTime, MaxRunEndTime)) as ExactDuration
+from source4
 
