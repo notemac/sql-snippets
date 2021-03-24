@@ -13,7 +13,7 @@ CSV example:
 5637147576,0x07FD3010000000FADA97C2F2EAE3044D8E457C50BA8CA2FF,4,"Admin"
 
 Solution: error in column [HASH] with datatype BINARY. Azure Synapse cant convert value "0x07FD3010000000D376D634E142825CE13F9D6450948FCBFF"
-to binary. To resolve need to change datatype BINARY of colum [HASH] to NVARCHAR(XXX) and it's.
+to binary. To resolve need to change datatype BINARY of colum [HASH] to NVARCHAR(XXX).
 */
 SELECT top 10 
   r.filepath(1) as [$FileName], 
