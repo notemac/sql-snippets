@@ -89,7 +89,7 @@ select top 10 * from dfs.MAINACCOUNT
 
 
 # ERRORS
-## Msg 15813, Level 16, State 1, Line 1 Error handling external file: 'Max errors count reached.'
+**Msg 15813, Level 16, State 1, Line 1 Error handling external file: 'Max errors count reached.'**  
 Statement ID: {697E0915-0E89-48EA-B225-CBAD880D9C00} | Query hash: 0x6BA0352A5F7FE762 | Distributed request ID: {9ADC2FA3-5A6C-4DDD-B336-BD8482FDA9E6}. 
 Total size of data scanned is 50 megabytes, total size of data moved is 0 megabytes, total size of data written is 0 megabytes.
 Msg 15813, Level 16, State 1, Line 1 Error handling external file: 'Max errors count reached.'. 
@@ -113,7 +113,7 @@ FROM
 ```  
 **CSV example:**  
 5637147576,0x07FD3010000000D376D634E142825CE13F9D6450948FCBFF,4,"Admin"
-5637147576,0x07FD3010000000FADA97C2F2EAE3044D8E457C50BA8CA2FF,4,"Admin"
+5637147576,0x07FD3010000000FADA97C2F2EAE3044D8E457C50BA8CA2FF,4,"Admin"  
 **Solution:**  
 error in column [HASH] with datatype BINARY. Azure Synapse cant convert value "0x07FD3010000000D376D634E142825CE13F9D6450948FCBFF"
 to binary. To resolve need to change datatype BINARY of colum [HASH] to NVARCHAR(XXX).
