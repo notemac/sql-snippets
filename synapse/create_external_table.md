@@ -1,4 +1,8 @@
 ## Creating external table
+https://docs.microsoft.com/en-us/sql/t-sql/statements/create-external-file-format-transact-sql?view=sql-server-ver15&tabs=delimited  
+https://docs.microsoft.com/en-us/sql/t-sql/statements/create-external-data-source-transact-sql?view=azure-sqldw-latest&tabs=dedicated  
+https://docs.microsoft.com/en-us/sql/t-sql/statements/create-external-table-transact-sql?view=azure-sqldw-latest&tabs=dedicated  
+https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/develop-storage-files-overview?tabs=impersonation#permissions  
 ```SQL
 --DROP DATABASE SCOPED CREDENTIAL sas_dynamics365_financeandoperations
 CREATE DATABASE SCOPED CREDENTIAL sas_dynamics365_financeandoperations
