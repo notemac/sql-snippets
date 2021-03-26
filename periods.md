@@ -24,6 +24,73 @@ RunEndTime
 14:00 - 15:00 и 16:00 - 16:30
 Итоговое время: 1 час 30 мин;
 
+```SQL
+with source AS
+(
+    select * from dbo.adf_rz_contract_log_34threads_20210322 with(nolock) 
+    where Activity = 'Oracle -> Data Lake' and status <> 'PreExecute' 
+)
+, points as
+(
+	select RunStartTime as TimePoint from source
+	union -- only distinct values
+	select RunEndTime from source
+) --select * from points
+, source2 as
+(
+    select
+      s.MainPipelineRunID
+      , s.DateFrom
+      , s.DateTo
+      , s.RunStartTime
+      , s.RunEndTime
+      , p.StartTimePoint
+      , p.EndTimePoint
+    from 
+        source s
+        cross apply
+        (	/* Для каждого отрезка находим все входящие в него метки времени*/
+            select 
+				p.TimePoint as StartTimePoint
+				, lead(TimePoint, 1, null) over(order by TimePoint) as EndTimePoint
+            from 
+                points p
+            where
+                p.TimePoint between s.RunStartTime and s.RunEndTime
+        ) p
+)
+, source3 as
+(
+	select
+		datediff(ss, StartTimePoint, EndTimePoint) as Duration
+	from
+		source2
+	where 
+		EndTimePoint is not null 
+	group by 
+		StartTimePoint
+		, EndTimePoint
+)
+select 
+	sum(Duration) as Duraion
+	, 
+    concat
+    (
+        case 
+            when len(cast(cast(sum(Duration)/60 as int) as nvarchar(3))) = 1 
+            then '0' + cast(cast(sum(Duration)/60 as int) as nvarchar(3))
+            else cast(cast(sum(Duration)/60 as int) as nvarchar(3))
+        end,
+        ':', 
+        case 
+            when len(cast(cast(sum(Duration)%60 as int) as nvarchar(3))) = 1 
+            then'0' + cast(cast(sum(Duration)%60 as int) as nvarchar(3))
+            else cast(cast(sum(Duration)%60 as int) as nvarchar(3))
+        end
+    ) as Duration
+from 
+	source3
+```
 
 with q as
 (
